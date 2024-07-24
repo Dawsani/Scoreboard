@@ -35,6 +35,10 @@ if ($recentGames->num_rows > 0) {
 			ORDER BY name;";
 		$playerList = $conn->query($sql);
 
+		if ($playerList === FALSE) {
+			echo "Error: " . $sql . "<br>" . $conn->error();
+		}
+
 		echo $row['created_at'] . " - " . $winnerName . " won against ";
 		
 		$numPlayers = $playerList->num_rows;

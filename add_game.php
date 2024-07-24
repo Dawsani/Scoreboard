@@ -18,7 +18,7 @@
 <tr id='input-group'>
 	<th><label>Player 1:</label></th>
 	<th><input type="text" id="player-1-name" name="players[]" required></th>
-	<th><input type="text" id="player-1-deck" name="decks[]"</th> 
+	<th><input type="text" id="player-1-deck" name="decks[]" required</th> 
 </tr>
 </table>
 
@@ -43,7 +43,7 @@ function addPlayerField() {
 	newInputGroup.innerHTML = `
 	<th><label>Player ${inputCount}</label></th>
 	<th><input type="text" id="input-${inputCount}-name" name="players[]" required></th>
-	<th><input type="text" id="input-${inputCount}-deck" name="decks[]"></th>`;
+	<th><input type="text" id="input-${inputCount}-deck" name="decks[]" required></th>`;
 	inputContainer.appendChild(newInputGroup);
 }
 </script>
@@ -57,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	include 'db_connect.php';	
 
 	$playerInputs = $_POST['players'];
+	$deckInputs = $_POST['decks'];
 	$winner = $_POST['winner'];
 	
 	// Add each new player to the player database
@@ -66,7 +67,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		
 		// If the player does not exist, create it.
 		if ($result->num_rows === 0) {
-			$sql = "INSERT INTO player (name) VALUES ('$player')";
+			$sql = "INSERT INTO player (name) VALUES ('$player');";
+			$conn->query($sql);
+		}
+	}
+
+	// Add each noew deck to the deck table
+	foreach ($deckInputs as $deck) {
+		$sql = "SELECT * FROM deck WHERE name LIKE '$deck';";
+		$result = $conn->query($sql);
+
+		// If the deck does not exist, create it
+		if ($result->num_rows === 0) {
+			$sql = "INSERT INTO deck (name) VALUES ('$deck');";
 			$conn->query($sql);
 		}
 	}
@@ -77,11 +90,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		)";
 	$conn->query($sql);
 
-	// Add players to the game record
-	foreach ($playerInputs as $player) {
-		$sql = "INSERT INTO game_player (game_id, player_id) VALUES (
+	// Add the records to the game
+	for ($i = 0; $i < count($playerInputs); $i++) {
+		$player = $playerInputs[$i];
+		$deck = $deckInputs[$i];
+
+		$sql = "INSERT INTO game_entry (game_id, player_id, deck_id) VALUES (
 				(SELECT id FROM game ORDER BY id DESC LIMIT 1),
-				(SELECT id FROM player WHERE name LIKE '$player')
+				(SELECT id FROM player WHERE name LIKE '$player'),
+				(SELECT id FROM deck WHERE name LIKE '$deck')
 			);";
 		$conn->query($sql);
 	}
