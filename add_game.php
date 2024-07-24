@@ -9,28 +9,26 @@
 <button onclick="window.location.href='index.php'">Home</button><br><br>
 
 <form action="add_game.php" method="post">
-<table>
+<table id='input-container'>
 <tr>
 	<th></th>
 	<th>Player Name</th>
 	<th>Deck Name</th>
 </tr>
-	<div id='input-container'>
-		<div id='input-group'>
-			<tr>
-			<th><label>Player 1:</label></th>
-			<th><input type="text" id="player-1-name" name="players[]" required></th>
-			<th><input type="text" id="player-1-deck" name="decks[]"</th> 
-			</tr>
-		</div>
-	</div>
+<tr id='input-group'>
+	<th><label>Player 1:</label></th>
+	<th><input type="text" id="player-1-name" name="players[]" required></th>
+	<th><input type="text" id="player-1-deck" name="decks[]"</th> 
+</tr>
 </table>
-	<button onclick="addPlayerField()">Add Player</button><br><br>
 
-	<label for "winner">Winner:</label>
-	<input type="text" id="winner" name="winner"><br><br>
+<button onclick="addPlayerField()">Add Player</button><br><br>
 
-	<button type="Submit">Submit</button>
+<label for "winner">Winner:</label>
+<input type="text" id="winner" name="winner"><br><br>
+
+<button type="Submit">Submit</button>
+
 </form>
 
 <script>
@@ -40,14 +38,12 @@ let inputCount = 1;
 
 function addPlayerField() {
 	inputCount++;
-	let newInputGroup = document.createElement('div');
+	let newInputGroup = document.createElement('tr');
 	newInputGroup.className = 'input-group';
 	newInputGroup.innerHTML = `
-	<tr>	
 	<th><label>Player ${inputCount}</label></th>
 	<th><input type="text" id="input-${inputCount}-name" name="players[]" required></th>
-	<th><input type="text" id="input-${inputCount}-deck" name="decks[]"></th>
-	</tr>`;
+	<th><input type="text" id="input-${inputCount}-deck" name="decks[]"></th>`;
 	inputContainer.appendChild(newInputGroup);
 }
 </script>
