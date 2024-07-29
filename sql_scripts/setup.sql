@@ -48,12 +48,21 @@ CREATE TABLE game_entry (
 	FOREIGN KEY (deck_id) REFERENCES deck(id)
 );
 
-DROP TABLE IF EXISTS usergroup;
+DROP TABLE IF EXISTS scoreboard;
 
-CREATE TABLE usergroup (
+CREATE TABLE scoreboard (
 	id INT AUTO_INCREMENT,
 	name VARCHAR(128) NOT NULL,
 	owner_id INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (owner_id) REFERENCES user(id)
+);
+
+DROP TABLE IF EXISTS scoreboard_user;
+
+CREATE TABLE scoreboard_user (
+	scoreboard_id INT NOT NULL,
+	user_id INT NOT NULL,
+	FOREIGN KEY (scoreboard_id) REFERENCES scoreboard(id),
+	FOREIGN KEY (user_id) REFERENCES user(id)
 );
