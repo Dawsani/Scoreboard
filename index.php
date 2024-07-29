@@ -19,7 +19,7 @@
 $sql = "SELECT created_at, name AS winner_name, game.id AS game_id
 	FROM game JOIN player ON game.winner_id = player.id
 	ORDER BY game.id DESC
-	LIMIT 10";
+	LIMIT 10;";
 $recentGames = $conn->query($sql);
 
 if ($recentGames->num_rows > 0) {
@@ -30,15 +30,12 @@ if ($recentGames->num_rows > 0) {
 
 		// Get a list of every player in the game, except the winner
 		$sql = "SELECT name
-			FROM game_player join player on game_player.player_id = player.id
-			WHERE game_player.game_id = $gameId AND name NOT LIKE '$winnerName'
+			FROM game_entry join player on game_entry.player_id = player.id
+			WHERE game_entry.game_id = $gameId AND name NOT LIKE '$winnerName'
 			ORDER BY name;";
+		
 		$playerList = $conn->query($sql);
-
-		if ($playerList === FALSE) {
-			echo "Error: " . $sql . "<br>" . $conn->error();
-		}
-
+		
 		echo $row['created_at'] . " - " . $winnerName . " won against ";
 		
 		$numPlayers = $playerList->num_rows;
@@ -64,16 +61,16 @@ if ($recentGames->num_rows > 0) {
 		
 		echo "<br>";
 	}
-}
-else {
+} else {
 	echo "No games recorded.";
 }
 ?>
 
 <h2>Games Played</h2>
+
 <?php
 // Get total games played by each player
-$sql = "select name, count(*) AS games_played from game_player join player on player_id = player.id group by name;";
+$sql = "select name, count(*) AS games_played from game_entry join player on player_id = player.id group by name;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

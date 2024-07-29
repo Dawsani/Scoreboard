@@ -47,3 +47,13 @@ CREATE TABLE game_entry (
 	FOREIGN KEY (player_id) REFERENCES player(id),
 	FOREIGN KEY (deck_id) REFERENCES deck(id)
 );
+
+DROP TABLE IF EXISTS usergroup;
+
+CREATE TABLE usergroup (
+	id INT AUTO_INCREMENT,
+	name VARCHAR(128) NOT NULL,
+	owner_id INT NOT NULL,
+	PRIMARY KEY (id),
+	FOREIGN KEY (owner_id) REFERENCES user(id)
+);
