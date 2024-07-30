@@ -77,25 +77,18 @@ if ($recentGames->num_rows > 0) {
 }
 ?>
 
-<h2>Games Played</h2>
+<h2>Games Won</h2>
 
 <?php
 // Get total games played by each player
-$sql = "select name, count(*) AS games_played 
-	from game_entry join player on player_id = player.id 
-	where game_id in (
-		select game_id 
-		from scoreboard_game 
-		where scoreboard_id = $scoreboardId
-	)
-	group by name;";
-
-
+$sql = "SELECT player.name, COUNT(*) as games_won
+	FROM player JOIN game ON player.id = game.winner_id
+	GROUP BY player.name;";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
 	while ($row = $result->fetch_assoc()) {
-		echo $row['name'] . ": " . $row['games_played'] . "<br>";
+		echo $row['name'] . ": " . $row['games_won'] . "<br>";
 	}
 }
 ?>
