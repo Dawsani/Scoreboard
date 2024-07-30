@@ -3,21 +3,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Scoreboard</title>
+<title>
+<?php
+	$scoreboardId = $_GET['scoreboardId'];
+	$sql = "SELECT name FROM scoreboard WHERE id = $scoreboardId;";
+	$result = $conn->query($sql);
+	$scoreboardName = $result->fetch_assoc()['name'];
+	echo $scoreboardName;
+?>
+</title>
 </head>
 
 <body>
+<a href="index.php">Home</a>
+<h1><?php echo $scoreboardName ?></h1>
 
-<h1>Game Recorder</h1>
-
-<button onclick = "window.location.href = 'add_game.php'">Record Game</button><br><br>
-
+<a href="add_game.php?scoreboardId=<?php echo $scoreboardId ?>">Record Game</a>
 <h2>Recent games</h2>
 
 <?php
 // Get the most recent 10 games
 $sql = "SELECT created_at, name AS winner_name, game.id AS game_id
 	FROM game JOIN player ON game.winner_id = player.id
+	WHERE game.id IN (
+		SELECT game_id
+		FROM scoreboard_game
+		WHERE scoreboard_id = $scoreboardId)
 	ORDER BY game.id DESC
 	LIMIT 10;";
 $recentGames = $conn->query($sql);
@@ -70,7 +81,16 @@ if ($recentGames->num_rows > 0) {
 
 <?php
 // Get total games played by each player
-$sql = "select name, count(*) AS games_played from game_entry join player on player_id = player.id group by name;";
+$sql = "select name, count(*) AS games_played 
+	from game_entry join player on player_id = player.id 
+	where game_id in (
+		select game_id 
+		from scoreboard_game 
+		where scoreboard_id = $scoreboardId
+	)
+	group by name;";
+
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {

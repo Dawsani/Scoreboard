@@ -66,3 +66,12 @@ CREATE TABLE scoreboard_user (
 	FOREIGN KEY (scoreboard_id) REFERENCES scoreboard(id),
 	FOREIGN KEY (user_id) REFERENCES user(id)
 );
+
+DROP TABLE IF EXISTS scoreboard_game;
+
+CREATE TABLE scoreboard_game (
+	scoreboard_id INT NOT NULL,
+	game_id INT NOT NULL,
+	FOREIGN KEY (scoreboard_id) REFERENCES scoreboard(id),
+	FOREIGN KEY (game_id) REFERENCES game(id)
+);

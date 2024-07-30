@@ -41,11 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	} else {
 		$message = "Username or password is incorrect.";
 	}
+
+
+echo "<p><?php echo htmlspecialchars($message); ?></p>";
+
 }
-
 ?>
-
-<p><?php echo htmlspecialchars($message); ?></p>
 
 </body>
 </html>

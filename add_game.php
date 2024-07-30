@@ -1,3 +1,9 @@
+<?php include 'db_connect.php' ?>
+
+<?php $scoreboardId = $_GET['scoreboardId']; ?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,10 +11,11 @@
 </head>
 <body>
 
-<h1>Record Game</h1>
-<button onclick="window.location.href='index.php'">Home</button><br><br>
+<a href='index.php'>Home</a> <a href='scoreboard.php?scoreboardId=<?php echo $scoreboardId ?>'>Scoreboard</a>
 
-<form action="add_game.php" method="post">
+<h1>Record Game</h1>
+
+<form action="add_game.php?scoreboardId=<?php echo $scoreboardId ?>" method="post">
 <table id='input-container'>
 <tr>
 	<th></th>
@@ -51,11 +58,9 @@ function addPlayerField() {
 </body>
 </html>
 
-
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-	include 'db_connect.php';	
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$playerInputs = $_POST['players'];
 	$deckInputs = $_POST['decks'];
 	$winner = $_POST['winner'];
@@ -72,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		}
 	}
 
-	// Add each noew deck to the deck table
+	// Add each new deck to the deck table
 	foreach ($deckInputs as $deck) {
 		$sql = "SELECT * FROM deck WHERE name LIKE '$deck';";
 		$result = $conn->query($sql);
@@ -90,18 +95,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		)";
 	$conn->query($sql);
 
+	// Get the id of the newest record
+	$gameId = $conn->insert_id;
+
 	// Add the records to the game
 	for ($i = 0; $i < count($playerInputs); $i++) {
 		$player = $playerInputs[$i];
 		$deck = $deckInputs[$i];
 
 		$sql = "INSERT INTO game_entry (game_id, player_id, deck_id) VALUES (
-				(SELECT id FROM game ORDER BY id DESC LIMIT 1),
+				$gameId,
 				(SELECT id FROM player WHERE name LIKE '$player'),
 				(SELECT id FROM deck WHERE name LIKE '$deck')
 			);";
 		$conn->query($sql);
 	}
+
+	// Add the game to the scoreboard
+	$sql = "INSERT INTO scoreboard_game (scoreboard_id, game_id) VALUES ($scoreboardId, $gameId)";
+	$conn->query($sql);
 
 	echo "Game recorded succesfully.<br>";
 }
