@@ -15,10 +15,12 @@
 </head>
 
 <body>
-<a href="index.php">Home</a>
+<?php include("header.php"); ?>
 <h1><?php echo $scoreboardName ?></h1>
 
 <a href="add_game.php?scoreboardId=<?php echo $scoreboardId ?>">Record Game</a>
+<a href="invite_user.php?scoreboardId=<?php echo $scoreboardId ?>">Invite User</a>
+
 <h2>Recent games</h2>
 
 <?php

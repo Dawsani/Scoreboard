@@ -2,7 +2,6 @@
 
 <?php
 include 'db_connect.php';
-include 'helpers.php';
 ?>
 
 <?php
@@ -23,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <title>Create New Scoreboard</title>
 </head>
 <body>
+<?php include("header.php"); ?>
 <h1>Create New Scoreboard</h1>
 <form action="create_scoreboard.php" method="POST">
 <label for='name'>Scoreboard Name</label>

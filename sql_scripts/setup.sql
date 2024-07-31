@@ -63,6 +63,7 @@ DROP TABLE IF EXISTS scoreboard_user;
 CREATE TABLE scoreboard_user (
 	scoreboard_id INT NOT NULL,
 	user_id INT NOT NULL,
+	PRIMARY KEY (scoreboard_id, user_id),
 	FOREIGN KEY (scoreboard_id) REFERENCES scoreboard(id),
 	FOREIGN KEY (user_id) REFERENCES user(id)
 );

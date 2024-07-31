@@ -11,8 +11,7 @@
 </head>
 <body>
 
-<a href='index.php'>Home</a> <a href='scoreboard.php?scoreboardId=<?php echo $scoreboardId ?>'>Scoreboard</a>
-
+<?php include("header.php") ?>
 <h1>Record Game</h1>
 
 <form action="add_game.php?scoreboardId=<?php echo $scoreboardId ?>" method="post">

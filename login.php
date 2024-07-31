@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	}
 
 
-echo "<p><?php echo htmlspecialchars($message); ?></p>";
+echo "<p>" . htmlspecialchars($message) . "</p>";
 
 }
 ?>

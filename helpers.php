@@ -9,4 +9,18 @@ function usernameToId($conn, $username) {
 		return -1;
 	}
 }
-?>
+
+function scoreboardIdToName($conn, $scoreboardId) {
+	$sql = "SELECT name FROM scoreboard WHERE id = $scoreboardId;";
+	$result = $conn->query($sql);
+	if (!$result) {
+		return -1;
+	}
+	
+	if ($result->num_rows == 0) {
+		return -1;
+	}
+
+	$scoreboardName = $result->fetch_assoc()['name'];
+	return $scoreboardName;
+}
