@@ -6,6 +6,7 @@ include 'db_connect.php';
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MTG Scoreboard</title>
 </head>
 <body>

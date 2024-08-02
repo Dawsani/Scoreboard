@@ -13,6 +13,7 @@ $scoreboardName = scoreboardIdToName($conn, $scoreboardId);
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Invite User</title>
 </head>
 <body>
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	$userId = usernameToId($conn, $username);
 
-	$sql = "SELECT * FROM scoreboard_user WHERE user_id = $userId;";
+	$sql = "SELECT * FROM scoreboard_user WHERE user_id = $userId AND scoreboard_id = $scoreboardId;";
 	$result = $conn->query($sql);
 	if ($result->num_rows > 0) {
 		echo "User \"$username\" has already been invited to this scoreboard.<br>";

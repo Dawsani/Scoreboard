@@ -2,6 +2,7 @@
 
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Log In</title>
 </head>
 <body>
@@ -37,7 +38,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	}
 	
 	// Check if password is correct
-	$passwordHash = $stmt->fetch_assoc()['password_hash'];
+	$stmt->bind_result($name, $passwordHash);
+	$stmt->fetch();
+	$passwordHash = $passwordHash;
 	if (password_verify($password, $passwordHash)) {
 		$_SESSION['username'] = $username;
 		header("Location: index.php");
