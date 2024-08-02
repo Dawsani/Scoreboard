@@ -12,6 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$sql = "INSERT INTO scoreboard (name, owner_id) VALUES ('$scoreboardName', " . usernameToId($conn, $username) . ");";
 	$result = $conn->query($sql);
 
+	// Add the user to scoreboard user to give them access
+	$scoreboardId = $conn->insert_id;
+	$userId = usernameToId($conn, $username);
+	$sql = "INSERT INTO scoreboard_user (scoreboard_id, user_id) VALUES ($scoreboardId, $userId);";
+	$result = $conn->query($sql);
+
 	Header("Location: index.php");
 }
 

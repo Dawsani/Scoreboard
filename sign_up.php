@@ -11,7 +11,7 @@
 	<label for="email">Email:</label>
 	<input type="email" id="email" name="email" required><br><br>
 	<label for="confirm_email">Confirm Email:</label>
-	<input type="text" id="confirm_email" name="confirm_email" required><br><br>
+	<input type="email" id="confirm_email" name="confirm_email" required><br><br>
 	<label for="username">Username:</label>
 	<input type="text" id="username" name="username" minlength=3 maxlength=20 required ><br><br>
 	<label for="password">Password:</label>
