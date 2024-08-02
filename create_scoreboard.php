@@ -9,8 +9,9 @@ include 'db_connect.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$scoreboardName = $_POST['name'];
 	$username = $_SESSION['username'];
-	$sql = "INSERT INTO scoreboard (name, owner_id) VALUES ('$scoreboardName', " . usernameToId($conn, $username) . ");";
-	$result = $conn->query($sql);
+	$sql = $conn->prepare("INSERT INTO scoreboard (name, owner_id) VALUES (?, ?);");
+	$sql->bind_param('si', $scoreboardName, usernameToId($conn, $username));
+	$sql->execute();
 
 	// Add the user to scoreboard user to give them access
 	$scoreboardId = $conn->insert_id;

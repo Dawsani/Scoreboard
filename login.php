@@ -26,24 +26,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$message = "";
 
 	// Check if user exists
-	$sql = "SELECT name, password_hash FROM user WHERE name LIKE '$username';";
-	$result = $conn->query($sql);
-	if ($result->num_rows === 0) {
-		$message = "Username not found.";
-	}
+	$stmt = $conn->prepare("SELECT name, password_hash FROM user WHERE name LIKE ?;");
+	$stmt->bind_param('s', $username);
+	$stmt->execute();
+	$stmt->store_result();
 
+	if ($stmt->num_rows === 0) {
+		echo "Username not found.";
+		exit();
+	}
+	
 	// Check if password is correct
-	$passwordHash = $result->fetch_assoc()['password_hash'];
+	$passwordHash = $stmt->fetch_assoc()['password_hash'];
 	if (password_verify($password, $passwordHash)) {
 		$_SESSION['username'] = $username;
 		header("Location: index.php");
 		exit();
 	} else {
-		$message = "Username or password is incorrect.";
+		echo "Username or password is incorrect.";
 	}
-
-
-echo "<p>" . htmlspecialchars($message) . "</p>";
 
 }
 ?>
