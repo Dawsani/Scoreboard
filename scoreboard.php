@@ -87,76 +87,99 @@ if ($recentGames->num_rows > 0) {
 }
 ?>
 
-<h2>4 Player Win Rates</h2>
-
 <?php
-
-$sql = "SET @numPlayers := 4;";
-$conn->query($sql);
-
-// Show each players games played by number of players in the game
-$sql = "
-SELECT games_played.player_name, COALESCE(games_won, 0) AS games_won, games_played, COALESCE(games_won, 0) / games_played * 100 AS win_rate
-FROM
-(
-SELECT player.name AS player_name, COUNT(*) AS games_played
-FROM game_entry
-JOIN (
+// Get each number of players listed in games
+$sql = "SELECT num_players
+	FROM (
 	SELECT game_id, COUNT(*) AS num_players
-	FROM game
-	JOIN game_entry ON game.id = game_entry.game_id
-	GROUP BY game_id
-) AS game_players
-ON game_entry.game_id = game_players.game_id
-JOIN player ON player.id = game_entry.player_id
-WHERE num_players = @numPlayers
-GROUP BY player_name
-) AS games_played
-
-LEFT JOIN
-
-(
-SELECT player.name AS player_name, COUNT(*) AS games_won
-FROM game
-JOIN (
-	SELECT game_id, COUNT(*) AS num_players
-	FROM game
-	JOIN game_entry ON game.id = game_entry.game_id
-	GROUP BY game_id
-) AS game_players
-ON game.id = game_players.game_id
-JOIN player ON player.id = game.winner_id
-WHERE num_players = @numPlayers
-GROUP BY player_name
-
-) AS games_won
-ON games_played.player_name = games_won.player_name;";
-
+	        FROM game
+	        JOIN game_entry ON game.id = game_entry.game_id
+	        GROUP BY game_id
+	) as game_num_players
+	GROUP BY num_players
+	ORDER BY num_players;";
 $result = $conn->query($sql);
 
 if ($result->num_rows == 0) {
-	echo "No existing data.<br>";
+	echo "<p>No data exists</p>";
 	exit();
 }
 
-echo "<table>
-	<tr>
-	<th>Player</th>	<th>Win Rate</th>
-	</tr>";	
-
-while ($row = $result->fetch_assoc()) {
-	$playerName = $row['player_name'];
-	$gamesPlayed = $row['games_played'];
-	$gamesWon = $row['games_won'];
-	$winRate = $row['win_rate'];
-
-	echo "<tr>
-		<td>$playerName</td><td>$gamesWon/$gamesPlayed $winRate%</td>
-		</tr>";
+$gameTypes = array();
+while($row = $result->fetch_assoc()) {
+	$numPlayers = $row['num_players'];
+	array_push($gameTypes, $numPlayers);
 }
 
-echo "</table>";
+foreach ($gameTypes as $numPlayers) {
 
+	echo "<h2>$numPlayers Player Win Rates</h2>";
+	$sql = "SET @numPlayers := $numPlayers;";
+	$conn->query($sql);
+
+	// Show each players games played by number of players in the game
+	$sql = "
+	SELECT games_played.player_name, COALESCE(games_won, 0) AS games_won, games_played, COALESCE(games_won, 0) / games_played * 100 AS win_rate
+	FROM
+	(
+	SELECT player.name AS player_name, COUNT(*) AS games_played
+	FROM game_entry
+	JOIN (
+		SELECT game_id, COUNT(*) AS num_players
+		FROM game
+		JOIN game_entry ON game.id = game_entry.game_id
+		GROUP BY game_id
+	) AS game_players
+	ON game_entry.game_id = game_players.game_id
+	JOIN player ON player.id = game_entry.player_id
+	WHERE num_players = @numPlayers
+	GROUP BY player_name
+	) AS games_played
+
+	LEFT JOIN
+
+	(
+	SELECT player.name AS player_name, COUNT(*) AS games_won
+	FROM game
+	JOIN (
+		SELECT game_id, COUNT(*) AS num_players
+		FROM game
+		JOIN game_entry ON game.id = game_entry.game_id
+		GROUP BY game_id
+	) AS game_players
+	ON game.id = game_players.game_id
+	JOIN player ON player.id = game.winner_id
+	WHERE num_players = @numPlayers
+	GROUP BY player_name
+
+	) AS games_won
+	ON games_played.player_name = games_won.player_name;";
+
+	$result = $conn->query($sql);
+
+	if ($result->num_rows == 0) {
+		echo "No existing data.<br>";
+		exit();
+	}
+
+	echo "<table>
+		<tr>
+		<th>Player</th>	<th>Win Rate</th>
+		</tr>";	
+
+	while ($row = $result->fetch_assoc()) {
+		$playerName = $row['player_name'];
+		$gamesPlayed = $row['games_played'];
+		$gamesWon = $row['games_won'];
+		$winRate = $row['win_rate'];
+
+		echo "<tr>
+			<td>$playerName</td><td>$gamesWon/$gamesPlayed $winRate%</td>
+			</tr>";
+	}
+
+	echo "</table>";
+}
 ?>
 </body>
 </html>
