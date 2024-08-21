@@ -1,0 +1,3 @@
+when a user records a game, there should automatically already by 2 or more entries added by default. either 2 of the most recent players, or just a copy of the last game, without the winner and note.
+only problem with this is that it could cause confusion, someone might think they are editing a game on accident.
+it could also start with 0 entries, which would make it easier for boards with no players yet.
