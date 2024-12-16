@@ -282,7 +282,7 @@ function gameToScoreboard($conn, $gameId) {
 }
 
 function deckNameToId($conn, $scoreboardId, $deckName) {
-	$stmt = $conn->prepare("SELECT id FROM deck WHERE name = ? AND scoreboard_id = ?;");
+	$stmt = $conn->prepare("SELECT id FROM deck WHERE name = BINARY ? AND scoreboard_id = ?;");
 	$stmt->bind_param('si', $deckName, $scoreboardId);
 	$stmt->execute();
 
