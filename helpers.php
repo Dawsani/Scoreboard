@@ -195,7 +195,7 @@ function convertDatetime($datetime) {
 	$second = $array[2];
 
 	$datetime = "";
-	$monthString;
+	$monthString = "";
 	if ($month == 1) {
 		$monthString = "January";
 	} 
@@ -286,6 +286,8 @@ function deckNameToId($conn, $scoreboardId, $deckName) {
 	$stmt->bind_param('si', $deckName, $scoreboardId);
 	$stmt->execute();
 
+	$deckId = -1;
+
 	$stmt->store_result();
 	$stmt->bind_result($deckId);
 	$stmt->fetch();
@@ -316,6 +318,8 @@ function playerNameToId($conn, $scoreboardId, $playerName) {
 	$stmt = $conn->prepare("SELECT id FROM player WHERE name LIKE ? AND scoreboard_id = ?;");
 	$stmt->bind_param('si', $playerName, $scoreboardId);
 	$stmt->execute();
+
+	$playerId = -1;
 
 	$stmt->store_result();
 	$stmt->bind_result($playerId);

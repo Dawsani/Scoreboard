@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$playerInputs = $_POST['players'];
 	$deckInputs = $_POST['decks'];
 	$winner = $_POST['winner'];
-	$winnerId = playerNameToId($conn, $winner);
+	$winnerId = playerNameToId($conn, $scoreboardId, $winner);
 
 	// Make sure the winner was one of the players
 	if (!in_array($winner, $playerInputs)) {
@@ -175,10 +175,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	for ($i = 0; $i < count($playerInputs); $i++) {
 		$player = $playerInputs[$i];
-		$playerId = playerNameToId($conn, $player);
+		$playerId = playerNameToId($conn, $scoreboardId, $player);
 
 		$deck = $deckInputs[$i];
-		$deckId = deckNameToId($conn, $deck);
+		$deckId = deckNameToId($conn, $scoreboardId, $deck);
 
 		$sql = "INSERT INTO game_entry (game_id, player_id, deck_id) VALUES ($gameId, $playerId, $deckId);";
 		$conn->query($sql);
