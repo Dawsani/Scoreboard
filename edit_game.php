@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 		// If the deck does not exist, create it
 		if ($result->num_rows === 0) {
-			$sql = "INSERT INTO deck (name) VALUES ('$deck');";
+			$sql = "INSERT INTO deck (name, scoreboard_id) VALUES ('$deck', $scoreboardId);";
 			$conn->query($sql);
 		}
 	}

@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 	// Add each new deck to the deck table
 	foreach ($deckInputs as $deck) {
-		$sql = "SELECT * FROM deck WHERE name LIKE '$deck';";
+		$sql = "SELECT * FROM deck WHERE LOWER(name) LIKE LOWER('$deck');";
 		$result = $conn->query($sql);
 
 		// If the deck does not exist, create it
