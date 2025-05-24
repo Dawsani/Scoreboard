@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Input Fields</title>
+    <style>
+        .input-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Add Multiple Inputs</h1>
+
+<form id="dynamic-form" action="submit.php" method="post">
+    <div id="input-container">
+        <div class="input-group">
+            <label for="input-1">Input 1:</label>
+            <input type="text" id="input-1" name="inputs[]" required>
+        </div>
+    </div>
+    <button type="button" id="add-input">Add Another Input</button>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let inputContainer = document.getElementById('input-container');
+        let addInputButton = document.getElementById('add-input');
+        let inputCount = 1;
+
+        addInputButton.addEventListener('click', function () {
+            inputCount++;
+            let newInputGroup = document.createElement('div');
+            newInputGroup.className = 'input-group';
+            newInputGroup.innerHTML = `
+                <label for="input-${inputCount}">Input ${inputCount}:</label>
+                <input type="text" id="input-${inputCount}" name="inputs[]" required>
+            `;
+            inputContainer.appendChild(newInputGroup);
+        });
+    });
+</script>
+
+</body>
+</html>
+
