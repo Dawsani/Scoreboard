@@ -7,9 +7,9 @@ $currentFile = basename($_SERVER['PHP_SELF']);
 
 // Send non-signed in users to the sign in page
 if ($currentFile !== "sign_up.php" && $currentFile !== "login.php") {
-	if (!isset($_SESSION['username'])) {
-		if (isset($_COOKIE['username'])) {
-			$_SESSION['username'] = $_COOKIE['username'];
+	if (!isset($_SESSION['email'])) {
+		if (isset($_COOKIE['email'])) {
+			$_SESSION['email'] = $_COOKIE['email'];
 		}
 		else {
 			header("Location: login.php");
@@ -39,9 +39,9 @@ if ($conn->connect_error) {
 if (isset($_GET['scoreboardId'])) {
 
 	$scoreboardId = $_GET['scoreboardId'];
-	$username = $_SESSION['username'];
+	$email = $_SESSION['email'];
 		
-	if (!checkScoreboardAccess($conn, $username, $scoreboardId)) {
+	if (!checkScoreboardAccess($conn, $email, $scoreboardId)) {
 		header('location: scoreboard_no_access.php');
 		exit();
 	}
@@ -50,9 +50,9 @@ if (isset($_GET['scoreboardId'])) {
 if (isset($_GET['gameId'])) {
 	$gameId = $_GET['gameId'];
 	$scoreboardId = gameToScoreboard($conn, $gameId);
-	$username = $_SESSION['username'];
+	$email = $_SESSION['email'];
 
-	if (!checkScoreboardAccess($conn, $username, $scoreboardId)) {
+	if (!checkScoreboardAccess($conn, $email, $scoreboardId)) {
                 header('location: scoreboard_no_access.php');
                 exit();
         }

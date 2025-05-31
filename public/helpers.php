@@ -257,8 +257,8 @@ function convertDatetime($datetime) {
 	return $datetime;
 }
 
-function checkScoreboardAccess($conn, $username, $scoreboardId) {
-	$userId = usernameToId($conn, $username);
+function checkScoreboardAccess($conn, $email, $scoreboardId) {
+	$userId = emailToId($conn, $email);
 
 	$sql = "SELECT * 
 		FROM scoreboard JOIN scoreboard_user 
@@ -330,6 +330,17 @@ function playerNameToId($conn, $scoreboardId, $playerName) {
 
 function usernameToId($conn, $username) {
 	$sql = "SELECT id FROM user WHERE name LIKE '$username';";
+	$result = $conn->query($sql);
+
+	if ($result->num_rows === 1) {
+		return $result->fetch_assoc()['id'];
+	} else {
+		return -1;
+	}
+}
+
+function emailToId($conn, $email) {
+	$sql = "SELECT id FROM user WHERE email = '$email';";
 	$result = $conn->query($sql);
 
 	if ($result->num_rows === 1) {

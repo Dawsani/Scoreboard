@@ -18,8 +18,8 @@ include 'db_connect.php';
 <h2>Your Scoreboards</h2>
 <?php
 
-$username = $_SESSION['username'];
-$userId = usernameToId($conn, $username);
+$email = $_SESSION['email'];
+$userId = emailToId($conn, $email);
 
 
 $sql = "SELECT scoreboard_id, scoreboard.name
